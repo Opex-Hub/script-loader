@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Script Loader | OPEX Hub',
+  description: 'Quick access to the latest OPEX Hub scripts and tools.',
   generator: 'v0.app',
   icons: {
     icon: [
