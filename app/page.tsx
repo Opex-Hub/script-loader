@@ -15,6 +15,7 @@ const scripts = [
 
 export default function Page() {
   const [copiedTitle, setCopiedTitle] = useState<string | null>(null)
+  const [activeScript, setActiveScript] = useState(0)
   const [currentTime, setCurrentTime] = useState('')
 
   useEffect(() => {
@@ -45,9 +46,34 @@ export default function Page() {
         <p>Quick access to the latest scripts and tools.</p>
       </header>
 
-      <section className="scripts-grid" aria-label="Available scripts">
-        {scripts.map((script) => (
-          <article className="script-container" key={script.title}>
+      <section className="scripts-panel" aria-label="Available scripts">
+        <div className="script-tabs" role="tablist" aria-label="Choose a script">
+          {scripts.map((script, index) => (
+            <button
+              className={`script-tab${activeScript === index ? ' active' : ''}`}
+              id={`script-tab-${index}`}
+              key={script.title}
+              onClick={() => setActiveScript(index)}
+              role="tab"
+              aria-selected={activeScript === index}
+              aria-controls={`script-panel-${index}`}
+              type="button"
+            >
+              <span className="tab-number">0{index + 1}</span>
+              {script.title}
+            </button>
+          ))}
+        </div>
+
+        {scripts.map((script, index) => (
+          <article
+            className="script-container"
+            id={`script-panel-${index}`}
+            key={script.title}
+            role="tabpanel"
+            aria-labelledby={`script-tab-${index}`}
+            hidden={activeScript !== index}
+          >
             <div className="card-heading">
               <div className="script-icon" aria-hidden="true">&lt;/&gt;</div>
               <div>

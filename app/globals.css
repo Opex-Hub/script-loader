@@ -51,7 +51,12 @@ button, a { font: inherit; }
 .hero h1 { margin: 0; font-size: clamp(2.75rem, 7vw, 5.5rem); line-height: .95; letter-spacing: -.07em; font-weight: 800; }
 .hero p { margin: 20px 0 0; color: var(--muted); font-size: 15px; }
 
-.scripts-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; max-width: 980px; margin: 0 auto; }
+.scripts-panel { max-width: 980px; margin: 0 auto; }
+.script-tabs { display: flex; gap: 8px; padding: 6px; margin-bottom: 12px; border: 1px solid var(--line); border-radius: 13px; background: rgba(18, 18, 27, .82); }
+.script-tab { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: center; padding: 12px 16px; border: 1px solid transparent; border-radius: 9px; color: var(--muted); background: transparent; cursor: pointer; font-size: 12px; font-weight: 700; transition: color .2s, background .2s, border-color .2s; }
+.script-tab:hover { color: var(--foreground); background: rgba(255,255,255,.04); }
+.script-tab.active { color: white; border-color: rgba(129,109,255,.38); background: rgba(129,109,255,.15); }
+.tab-number { color: var(--purple-light); font: 10px monospace; }
 .script-container, .info-card { border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(29, 29, 41, .85), rgba(12, 13, 19, .92)); box-shadow: 0 20px 60px rgba(0,0,0,.25); }
 .script-container { padding: 24px; }
 .card-heading { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
@@ -82,7 +87,7 @@ footer span { margin: 0 8px; color: var(--purple); }
 @media (max-width: 700px) {
   .page-shell { padding: 46px 16px 28px; }
   .hero { margin-bottom: 34px; }
-  .scripts-grid { grid-template-columns: 1fr; }
+  .script-tabs { flex-direction: column; }
   .script-container { padding: 20px; }
   .coming-soon ul { flex-direction: column; align-items: center; gap: 10px; }
 }
