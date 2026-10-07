@@ -17,6 +17,8 @@ export default function Page() {
   const [copiedTitle, setCopiedTitle] = useState<string | null>(null)
   const [activeScript, setActiveScript] = useState(0)
   const [currentTime, setCurrentTime] = useState('')
+  const [lootUrl, setLootUrl] = useState<string | null>(null)
+  const [isLoadingLoot, setIsLoadingLoot] = useState(false)
 
   useEffect(() => {
     const updateTime = () => setCurrentTime(new Date().toUTCString())
@@ -24,6 +26,30 @@ export default function Page() {
     const interval = window.setInterval(updateTime, 1000)
     return () => window.clearInterval(interval)
   }, [])
+
+  async function openLootLabs(index: number) {
+    setActiveScript(index)
+    setIsLoadingLoot(true)
+    setLootUrl(null)
+
+    try {
+      const response = await fetch('https://lootapp.ai/inapp?tid=1725338')
+      if (response.status === 204 || !response.ok) return
+      const data = await response.json()
+      if (typeof data.ptr === 'string' && data.ptr) setLootUrl(data.ptr)
+    } catch {
+      // Keep the script available if the ad service is unavailable.
+    } finally {
+      setIsLoadingLoot(false)
+    }
+  }
+
+  function continueToLootLabs() {
+    if (!lootUrl) return
+    const url = lootUrl.startsWith('//') ? `https:${lootUrl}` : lootUrl
+    window.open(url, '_blank', 'noopener,noreferrer')
+    setLootUrl(null)
+  }
 
   async function copyScript(title: string, code: string) {
     try {
@@ -53,7 +79,7 @@ export default function Page() {
               className={`script-tab${activeScript === index ? ' active' : ''}`}
               id={`script-tab-${index}`}
               key={script.title}
-              onClick={() => setActiveScript(index)}
+              onClick={() => openLootLabs(index)}
               role="tab"
               aria-selected={activeScript === index}
               aria-controls={`script-panel-${index}`}
@@ -115,6 +141,31 @@ export default function Page() {
       </section>
 
       <footer>OPEX HUB <span>•</span> Script Loader</footer>
+
+      {isLoadingLoot && (
+        <div className="loot-overlay" role="status" aria-live="polite">
+          <div className="loot-dialog">
+            <span className="card-kicker">LOOTLABS</span>
+            <h2>Preparing your script</h2>
+            <p>Loading the access step for {scripts[activeScript].title}.</p>
+            <div className="loot-loader" aria-hidden="true" />
+          </div>
+        </div>
+      )}
+
+      {lootUrl && !isLoadingLoot && (
+        <div className="loot-overlay" role="dialog" aria-modal="true" aria-labelledby="loot-title">
+          <div className="loot-dialog">
+            <span className="card-kicker">LOOTLABS ACCESS</span>
+            <h2 id="loot-title">Continue to unlock</h2>
+            <p>Complete the LootLabs step, then return here to use {scripts[activeScript].title}.</p>
+            <div className="loot-actions">
+              <button className="copy-btn" onClick={continueToLootLabs} type="button">Continue</button>
+              <button className="loot-dismiss" onClick={() => setLootUrl(null)} type="button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
