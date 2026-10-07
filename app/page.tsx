@@ -15,7 +15,7 @@ const scripts = [
 
 export default function Page() {
   const [copiedTitle, setCopiedTitle] = useState<string | null>(null)
-  const [activeScript, setActiveScript] = useState(0)
+  const [activeScript, setActiveScript] = useState<number | null>(null)
   const [currentTime, setCurrentTime] = useState('')
   const [lootUrl, setLootUrl] = useState<string | null>(null)
   const [isLoadingLoot, setIsLoadingLoot] = useState(false)
@@ -147,7 +147,7 @@ export default function Page() {
           <div className="loot-dialog">
             <span className="card-kicker">LOOTLABS</span>
             <h2>Preparing your script</h2>
-            <p>Loading the access step for {scripts[activeScript].title}.</p>
+            <p>Loading the access step for {scripts[activeScript ?? 0].title}.</p>
             <div className="loot-loader" aria-hidden="true" />
           </div>
         </div>
