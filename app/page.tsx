@@ -28,7 +28,7 @@ export default function Page() {
   }, [])
 
   async function openLootLabs(index: number) {
-    setActiveScript(index)
+    setActiveScript(null)
     setIsLoadingLoot(true)
     setLootUrl(null)
 
@@ -36,9 +36,12 @@ export default function Page() {
       const response = await fetch('https://lootapp.ai/inapp?tid=1725338')
       if (response.status === 204 || !response.ok) return
       const data = await response.json()
-      if (typeof data.ptr === 'string' && data.ptr) setLootUrl(data.ptr)
+      if (typeof data.ptr === 'string' && data.ptr) {
+        setActiveScript(index)
+        setLootUrl(data.ptr)
+      }
     } catch {
-      // Keep the script available if the ad service is unavailable.
+      // Keep the script hidden if the LootLabs step is unavailable.
     } finally {
       setIsLoadingLoot(false)
     }
