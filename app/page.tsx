@@ -161,7 +161,7 @@ export default function Page() {
             <p>Complete the LootLabs step, then return here to use {scripts[activeScript].title}.</p>
             <div className="loot-actions">
               <button className="copy-btn" onClick={continueToLootLabs} type="button">Continue</button>
-              <button className="loot-dismiss" onClick={() => setLootUrl(null)} type="button">Cancel</button>
+              <button className="loot-dismiss" onClick={() => { setLootUrl(null); setActiveScript(null) }} type="button">Cancel</button>
             </div>
           </div>
         </div>
