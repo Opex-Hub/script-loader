@@ -18,6 +18,7 @@ export default function Page() {
   const [activeScript, setActiveScript] = useState<number | null>(null)
   const [currentTime, setCurrentTime] = useState('')
   const [lootUrl, setLootUrl] = useState<string | null>(null)
+  const [lootError, setLootError] = useState(false)
   const [isLoadingLoot, setIsLoadingLoot] = useState(false)
 
   useEffect(() => {
@@ -29,19 +30,34 @@ export default function Page() {
 
   async function openLootLabs(index: number) {
     setActiveScript(null)
-    setIsLoadingLoot(true)
     setLootUrl(null)
+    setLootError(false)
+    setIsLoadingLoot(true)
 
     try {
-      const response = await fetch('https://lootapp.ai/inapp?tid=1725338')
-      if (response.status === 204 || !response.ok) return
-      const data = await response.json()
-      if (typeof data.ptr === 'string' && data.ptr) {
-        setActiveScript(index)
-        setLootUrl(data.ptr)
+      const response = await fetch('https://lootapp.ai/inapp?tid=1725338', {
+        headers: { Accept: 'application/json' },
+      })
+
+      if (!response.ok || response.status === 204) {
+        setLootError(true)
+        return
       }
+
+      const data: unknown = await response.json()
+      const ptr = typeof data === 'object' && data !== null && 'ptr' in data
+        ? data.ptr
+        : null
+
+      if (typeof ptr !== 'string' || !ptr) {
+        setLootError(true)
+        return
+      }
+
+      setActiveScript(index)
+      setLootUrl(ptr)
     } catch {
-      // Keep the script hidden if the LootLabs step is unavailable.
+      setLootError(true)
     } finally {
       setIsLoadingLoot(false)
     }
@@ -152,6 +168,19 @@ export default function Page() {
             <h2>Preparing your script</h2>
             <p>Loading the access step for {scripts[activeScript ?? 0].title}.</p>
             <div className="loot-loader" aria-hidden="true" />
+          </div>
+        </div>
+      )}
+
+      {lootError && !isLoadingLoot && (
+        <div className="loot-overlay" role="alertdialog" aria-modal="true" aria-labelledby="loot-error-title">
+          <div className="loot-dialog">
+            <span className="card-kicker">LOOTLABS UNAVAILABLE</span>
+            <h2 id="loot-error-title">Could not load access</h2>
+            <p>Please try clicking the script tab again. The script will stay hidden until the LootLabs step loads.</p>
+            <div className="loot-actions">
+              <button className="loot-dismiss" onClick={() => setLootError(false)} type="button">Cancel</button>
+            </div>
           </div>
         </div>
       )}
