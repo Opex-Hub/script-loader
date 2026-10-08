@@ -48,7 +48,9 @@ button, a { font: inherit; }
 .eyebrow, .card-kicker { color: var(--purple-light); font-size: 10px; font-weight: 700; letter-spacing: .22em; }
 .eyebrow { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 18px; }
 .eyebrow span { display: block; width: 34px; height: 1px; background: var(--purple); opacity: .65; }
-.hero h1 { margin: 0; font-size: clamp(2.75rem, 7vw, 5.5rem); line-height: .95; letter-spacing: -.07em; font-weight: 800; }
+.hero h1 { margin: 0; font-size: clamp(2.75rem, 7vw, 5.5rem); line-height: .95; letter-spacing: -.07em; font-weight: 800; background: linear-gradient(110deg, #fff 18%, #b9adff 38%, #fff 50%, #7866ff 68%, #fff 86%); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 34px rgba(129, 109, 255, .22); animation: title-shine 5s linear infinite; }
+
+@keyframes title-shine { to { background-position: 220% center; } }
 .hero p { margin: 20px 0 0; color: var(--muted); font-size: 15px; }
 
 .scripts-panel { max-width: 980px; margin: 0 auto; }
